@@ -1,0 +1,6 @@
+@Triplace.Api_HostAddress = http://localhost:5122
+
+GET {{Triplace.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
