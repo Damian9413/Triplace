@@ -1,7 +1,1 @@
-namespace Triplace.Domain.Entities;
-
-public enum RouteItemPriority
-{
-    MustHave,
-    Optional
-}
+// This file is intentionally empty. See Triplace.Domain.Enums.Priority instead.

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Triplace.Domain\Triplace.Domain.csproj" />
+    <ProjectReference Include="..\Triplace.Application\Triplace.Application.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
