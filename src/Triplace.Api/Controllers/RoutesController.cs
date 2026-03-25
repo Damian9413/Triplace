@@ -13,6 +13,14 @@ namespace Triplace.Api.Controllers;
 [Route("api/routes")]
 public class RoutesController(RouteService service) : ControllerBase
 {
+    [HttpGet]
+    [ProducesResponseType(typeof(List<RouteResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll()
+    {
+        var routes = await service.GetAllAsync();
+        return Ok(routes.Select(DomainMapper.ToResponse).ToList());
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateRouteRequest request)

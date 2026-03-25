@@ -3,7 +3,13 @@
     "allow": [
       "Bash(dotnet:*)",
       "Bash(mkdir:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(curl -s http://localhost:5000/api/attractions)",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s http://localhost:7117/api/attractions)",
+      "Bash(curl -s http://localhost:5122/api/attractions)",
+      "Bash(curl -s http://localhost:5122/api/catalogs)",
+      "Bash(curl -s http://localhost:5122/api/addon-types)"
     ]
   }
 }

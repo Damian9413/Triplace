@@ -53,6 +53,8 @@ public class RouteService(
 
     public Task<Domain.Entities.Route?> GetByIdAsync(RouteId id) => routeRepository.GetByIdAsync(id);
 
+    public Task<IReadOnlyList<Domain.Entities.Route>> GetAllAsync() => routeRepository.GetAllAsync();
+
     public async Task<IReadOnlyList<ExclusionConflict>> CheckExclusionsAsync(RouteId routeId)
     {
         var route = await GetRouteOrThrowAsync(routeId);

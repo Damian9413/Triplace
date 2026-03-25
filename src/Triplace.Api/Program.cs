@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 using Triplace.Api.Middleware;
 using Triplace.Api.Seeding;
 using Triplace.Application.Repositories;
@@ -10,11 +11,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(opts =>
         opts.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "AttractionRoutePlanner API", Version = "v1" });
-});
+builder.Services.AddOpenApi();
 
 // Infrastructure — repositories (singletons so in-memory state persists)
 builder.Services.AddSingleton<IAttractionRepository, InMemoryAttractionRepository>();
@@ -38,8 +35,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AttractionRoutePlanner v1"));
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
