@@ -10,7 +10,6 @@ namespace Triplace.Application.Services;
 
 public class RouteService(
     IRouteRepository routeRepository,
-    ISeasonalCatalogRepository catalogRepository,
     IAttractionRelationRegistryRepository registryRepository)
 {
     public async Task<RouteId> CreateAsync(CreateRouteCommand command)
@@ -23,17 +22,17 @@ public class RouteService(
             builder.ScopedTo(command.ScopeGroupId.Value);
 
         foreach (var item in command.Items)
-            builder.WithItem(item.CatalogEntryId, item.Priority);
+            builder.WithItem(item.AttractionId, item.Priority);
 
         var route = builder.Build();
         await routeRepository.SaveAsync(route);
         return route.Id;
     }
 
-    public async Task AddItemAsync(RouteId routeId, CatalogEntryId catalogEntryId, Priority priority)
+    public async Task AddItemAsync(RouteId routeId, AttractionId attractionId, Priority priority)
     {
         var route = await GetRouteOrThrowAsync(routeId);
-        route.AddItem(catalogEntryId, priority);
+        route.AddItem(attractionId, priority);
         await routeRepository.SaveAsync(route);
     }
 
@@ -59,26 +58,14 @@ public class RouteService(
     {
         var route = await GetRouteOrThrowAsync(routeId);
         var registry = await registryRepository.GetRegistryAsync();
-        var allCatalogs = await catalogRepository.GetAllAsync();
-
-        var entryToAttraction = allCatalogs
-            .SelectMany(c => c.Entries)
-            .ToDictionary(e => e.Id, e => e.AttractionId);
 
         var conflicts = new List<ExclusionConflict>();
         var items = route.Items.ToList();
 
         for (int i = 0; i < items.Count; i++)
-        {
             for (int j = i + 1; j < items.Count; j++)
-            {
-                if (!entryToAttraction.TryGetValue(items[i].CatalogEntryId, out var attrA)) continue;
-                if (!entryToAttraction.TryGetValue(items[j].CatalogEntryId, out var attrB)) continue;
-
-                if (registry.AreExclusive(attrA, attrB))
-                    conflicts.Add(new ExclusionConflict(attrA, attrB));
-            }
-        }
+                if (registry.AreExclusive(items[i].AttractionId, items[j].AttractionId))
+                    conflicts.Add(new ExclusionConflict(items[i].AttractionId, items[j].AttractionId));
 
         return conflicts.AsReadOnly();
     }

@@ -6,14 +6,14 @@ namespace Triplace.Domain.Entities;
 public class RouteItem
 {
     public RouteItemId Id { get; }
-    public CatalogEntryId CatalogEntryId { get; }
+    public AttractionId AttractionId { get; }
     public Priority Priority { get; }
     public int SortOrder { get; private set; }
 
-    internal RouteItem(RouteItemId id, CatalogEntryId catalogEntryId, Priority priority, int sortOrder)
+    internal RouteItem(RouteItemId id, AttractionId attractionId, Priority priority, int sortOrder)
     {
         Id = id;
-        CatalogEntryId = catalogEntryId;
+        AttractionId = attractionId;
         Priority = priority;
         SortOrder = sortOrder;
     }

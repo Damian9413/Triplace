@@ -57,21 +57,21 @@ public class SeasonalCatalogsController(SeasonalCatalogService service) : Contro
         return Ok(catalogs.Select(DomainMapper.ToResponse).ToList());
     }
 
-    [HttpPost("{id:guid}/publish")]
+    [HttpPost("{id:guid}/attractions")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> PublishAttraction(Guid id, [FromBody] PublishToCatalogRequest request)
+    public async Task<IActionResult> AddAttraction(Guid id, [FromBody] PublishToCatalogRequest request)
     {
-        await service.PublishToCatalogAsync(
+        await service.AddAttractionAsync(
             new SeasonalCatalogId(id),
             new AttractionId(request.AttractionId));
         return NoContent();
     }
 
-    [HttpPost("{id:guid}/entries/{entryId:guid}/deactivate")]
+    [HttpDelete("{id:guid}/attractions/{attractionId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeactivateEntry(Guid id, Guid entryId)
+    public async Task<IActionResult> RemoveAttraction(Guid id, Guid attractionId)
     {
-        await service.DeactivateEntryAsync(new SeasonalCatalogId(id), new CatalogEntryId(entryId));
+        await service.RemoveAttractionAsync(new SeasonalCatalogId(id), new AttractionId(attractionId));
         return NoContent();
     }
 }

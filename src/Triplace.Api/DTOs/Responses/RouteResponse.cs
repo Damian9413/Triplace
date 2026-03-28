@@ -14,7 +14,7 @@ public class RouteResponse
 public class RouteItemResponse
 {
     public Guid Id { get; set; }
-    public Guid CatalogEntryId { get; set; }
+    public Guid AttractionId { get; set; }
     public string Priority { get; set; } = string.Empty;
     public int SortOrder { get; set; }
 }

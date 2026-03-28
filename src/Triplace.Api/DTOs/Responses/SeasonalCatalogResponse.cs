@@ -5,7 +5,7 @@ public class SeasonalCatalogResponse
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public CatalogMetadataResponse Metadata { get; set; } = new();
-    public List<CatalogEntryResponse> Entries { get; set; } = [];
+    public List<Guid> AttractionIds { get; set; } = [];
 }
 
 public class CatalogMetadataResponse
@@ -16,13 +16,4 @@ public class CatalogMetadataResponse
     public string Region { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int? MaxCapacity { get; set; }
-}
-
-public class CatalogEntryResponse
-{
-    public Guid Id { get; set; }
-    public Guid AttractionId { get; set; }
-    public string SnapshotName { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
-    public DateTime PublishedAt { get; set; }
 }

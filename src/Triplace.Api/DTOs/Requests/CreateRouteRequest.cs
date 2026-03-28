@@ -11,6 +11,6 @@ public class CreateRouteRequest
 
 public class RouteItemRequest
 {
-    public Guid CatalogEntryId { get; set; }
-    public string Priority { get; set; } = "Must"; // Must, Optional
+    public Guid AttractionId { get; set; }
+    public string Priority { get; set; } = "Must";
 }

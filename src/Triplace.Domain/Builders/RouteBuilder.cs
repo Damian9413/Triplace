@@ -10,7 +10,7 @@ public class RouteBuilder
     private string _description = string.Empty;
     private Season _season;
     private AttractionGroupId? _scopeGroupId;
-    private readonly List<(CatalogEntryId EntryId, Priority Priority)> _items = new();
+    private readonly List<(AttractionId AttractionId, Priority Priority)> _items = new();
 
     private RouteBuilder(string name) => _name = name;
 
@@ -20,17 +20,17 @@ public class RouteBuilder
     public RouteBuilder ForSeason(Season season) { _season = season; return this; }
     public RouteBuilder ScopedTo(AttractionGroupId groupId) { _scopeGroupId = groupId; return this; }
 
-    public RouteBuilder WithItem(CatalogEntryId catalogEntryId, Priority priority)
+    public RouteBuilder WithItem(AttractionId attractionId, Priority priority)
     {
-        _items.Add((catalogEntryId, priority));
+        _items.Add((attractionId, priority));
         return this;
     }
 
     public Route Build()
     {
         var route = Route.Create(_name, _description, _season, _scopeGroupId);
-        foreach (var (entryId, priority) in _items)
-            route.AddItem(entryId, priority);
+        foreach (var (attractionId, priority) in _items)
+            route.AddItem(attractionId, priority);
         return route;
     }
 }

@@ -106,16 +106,7 @@ public static class DomainMapper
             Description = c.Metadata.Description,
             MaxCapacity = c.Metadata.MaxCapacity
         },
-        Entries = c.Entries.Select(ToResponse).ToList()
-    };
-
-    public static CatalogEntryResponse ToResponse(CatalogEntry e) => new()
-    {
-        Id = e.Id.Value,
-        AttractionId = e.AttractionId.Value,
-        SnapshotName = e.SnapshotName,
-        IsActive = e.IsActive,
-        PublishedAt = e.PublishedAt
+        AttractionIds = c.Attractions.Select(id => id.Value).ToList()
     };
 
     public static RouteResponse ToResponse(Domain.Entities.Route r) => new()
@@ -132,7 +123,7 @@ public static class DomainMapper
     public static RouteItemResponse ToResponse(RouteItem i) => new()
     {
         Id = i.Id.Value,
-        CatalogEntryId = i.CatalogEntryId.Value,
+        AttractionId = i.AttractionId.Value,
         Priority = i.Priority.ToString(),
         SortOrder = i.SortOrder
     };

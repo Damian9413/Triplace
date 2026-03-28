@@ -10,4 +10,4 @@ public record CreateRouteCommand(
     AttractionGroupId? ScopeGroupId,
     IReadOnlyList<RouteItemCommand> Items);
 
-public record RouteItemCommand(CatalogEntryId CatalogEntryId, Priority Priority);
+public record RouteItemCommand(AttractionId AttractionId, Priority Priority);

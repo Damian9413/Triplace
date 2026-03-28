@@ -26,7 +26,7 @@ public class RoutesController(RouteService service) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateRouteRequest request)
     {
         var items = request.Items.Select(i => new RouteItemCommand(
-            new CatalogEntryId(i.CatalogEntryId),
+            new AttractionId(i.AttractionId),
             Enum.Parse<Priority>(i.Priority, true)
         )).ToList();
 
@@ -57,7 +57,7 @@ public class RoutesController(RouteService service) : ControllerBase
     {
         await service.AddItemAsync(
             new RouteId(id),
-            new CatalogEntryId(request.CatalogEntryId),
+            new AttractionId(request.AttractionId),
             Enum.Parse<Priority>(request.Priority, true));
         return NoContent();
     }

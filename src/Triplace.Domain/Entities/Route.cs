@@ -27,10 +27,10 @@ public class Route
     internal static Route Create(string name, string description, Season season, AttractionGroupId? scopeGroupId)
         => new(RouteId.New(), name, description, season, scopeGroupId);
 
-    public void AddItem(CatalogEntryId catalogEntryId, Priority priority)
+    public void AddItem(AttractionId attractionId, Priority priority)
     {
         var sortOrder = _items.Count > 0 ? _items.Max(i => i.SortOrder) + 1 : 0;
-        _items.Add(new RouteItem(RouteItemId.New(), catalogEntryId, priority, sortOrder));
+        _items.Add(new RouteItem(RouteItemId.New(), attractionId, priority, sortOrder));
     }
 
     public void RemoveItem(RouteItemId id)

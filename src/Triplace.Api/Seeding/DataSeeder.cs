@@ -110,13 +110,9 @@ public static class DataSeeder
             "Letni katalog atrakcji Krakowa",
             500));
 
-        // 7. Publish all attractions to catalog
+        // 7. Add all attractions to catalog
         foreach (var id in attractionIds.Values)
-            await catalogService.PublishToCatalogAsync(catalogId, id);
-
-        // Load catalog entries
-        var catalog = (await catalogService.GetByIdAsync(catalogId))!;
-        var entryMap = catalog.Entries.ToDictionary(e => e.SnapshotName, e => e.Id);
+            await catalogService.AddAttractionAsync(catalogId, id);
 
         // 8. Exclusion: Muzeum Auschwitz ↔ Kazimierz
         await relationService.AddExclusionAsync(
@@ -129,17 +125,14 @@ public static class DataSeeder
             attractionMap["Rynek Główny"].Id);
 
         // 10. Route: Kraków w 1 dzień
-        var routeItems = new List<RouteItemCommand>();
-        if (entryMap.TryGetValue("Wawel", out var wawelEntry))
-            routeItems.Add(new RouteItemCommand(wawelEntry, Priority.Must));
-        if (entryMap.TryGetValue("Rynek Główny", out var rynekEntry))
-            routeItems.Add(new RouteItemCommand(rynekEntry, Priority.Must));
-        if (entryMap.TryGetValue("Sukiennice", out var sukieEntry))
-            routeItems.Add(new RouteItemCommand(sukieEntry, Priority.Must));
-        if (entryMap.TryGetValue("Kazimierz", out var kazEntry))
-            routeItems.Add(new RouteItemCommand(kazEntry, Priority.Optional));
-        if (entryMap.TryGetValue("Kościół Mariacki", out var koscEntry))
-            routeItems.Add(new RouteItemCommand(koscEntry, Priority.Optional));
+        var routeItems = new List<RouteItemCommand>
+        {
+            new(attractionMap["Wawel"].Id, Priority.Must),
+            new(attractionMap["Rynek Główny"].Id, Priority.Must),
+            new(attractionMap["Sukiennice"].Id, Priority.Must),
+            new(attractionMap["Kazimierz"].Id, Priority.Optional),
+            new(attractionMap["Kościół Mariacki"].Id, Priority.Optional)
+        };
 
         await routeService.CreateAsync(new CreateRouteCommand(
             "Kraków w 1 dzień",

@@ -32,21 +32,21 @@ public class SeasonalCatalogService(
         return catalog.Id;
     }
 
-    public async Task PublishToCatalogAsync(SeasonalCatalogId catalogId, AttractionId attractionId)
+    public async Task AddAttractionAsync(SeasonalCatalogId catalogId, AttractionId attractionId)
     {
         var catalog = await GetCatalogOrThrowAsync(catalogId);
         var attraction = await attractionRepository.GetByIdAsync(attractionId);
         if (attraction is null)
             throw new EntityNotFoundException($"Attraction {attractionId.Value} not found.");
 
-        catalog.Publish(attraction);
+        catalog.AddAttraction(attraction);
         await catalogRepository.SaveAsync(catalog);
     }
 
-    public async Task DeactivateEntryAsync(SeasonalCatalogId catalogId, CatalogEntryId entryId)
+    public async Task RemoveAttractionAsync(SeasonalCatalogId catalogId, AttractionId attractionId)
     {
         var catalog = await GetCatalogOrThrowAsync(catalogId);
-        catalog.Deactivate(entryId);
+        catalog.RemoveAttraction(attractionId);
         await catalogRepository.SaveAsync(catalog);
     }
 
