@@ -1,7 +1,6 @@
 using Triplace.Application.Repositories;
 using Triplace.Domain.Enums;
 using Triplace.Domain.Ids;
-using Triplace.Domain.Specifications;
 using Triplace.Domain.ValueObjects;
 
 namespace Triplace.Application.Services;
@@ -41,10 +40,4 @@ public class RelationService(IAttractionRelationRegistryRepository registryRepos
         return registry.AreExclusive(a, b);
     }
 
-    public async Task<IReadOnlyList<AttractionRelation>> FindBySpecAsync(
-        ISpecification<AttractionRelation> spec)
-    {
-        var registry = await registryRepository.GetRegistryAsync();
-        return registry.All.Where(r => spec.IsSatisfiedBy(r)).ToList().AsReadOnly();
-    }
 }

@@ -12,6 +12,11 @@ public static class DomainMapper
         Id = a.Id.Value,
         Name = a.Name,
         Status = a.Status.ToString(),
+        Category = a.Category.ToString(),
+        BestSeasons = a.BestSeasons.Select(s => s.ToString()).ToList(),
+        Duration = a.Duration.ToString(),
+        IsOutdoor = a.IsOutdoor,
+        IsFree = a.IsFree,
         Metadata = new AttractionMetadataResponse
         {
             Entries = a.Metadata.Entries.Select(e => new MetadataEntryResponse

@@ -8,21 +8,37 @@ namespace Triplace.Domain.Entities;
 
 public class Attraction : IAttractionNode
 {
+    private readonly HashSet<Season> _bestSeasons;
+
     public AttractionId Id { get; }
     public string Name { get; private set; }
     public AttractionStatus Status { get; private set; }
+    public AttractionCategory Category { get; private set; }
+    public IReadOnlySet<Season> BestSeasons => _bestSeasons;
+    public VisitDuration Duration { get; private set; }
+    public bool IsOutdoor { get; private set; }
+    public bool IsFree { get; private set; }
     public AttractionMetadata Metadata { get; private set; }
 
-    private Attraction(AttractionId id, string name, AttractionMetadata metadata)
+    private Attraction(AttractionId id, string name, AttractionCategory category,
+        HashSet<Season> bestSeasons, VisitDuration duration, bool isOutdoor, bool isFree,
+        AttractionMetadata metadata)
     {
         Id = id;
         Name = name;
         Status = AttractionStatus.Draft;
+        Category = category;
+        _bestSeasons = bestSeasons;
+        Duration = duration;
+        IsOutdoor = isOutdoor;
+        IsFree = isFree;
         Metadata = metadata;
     }
 
-    internal static Attraction CreateDraft(string name, AttractionMetadata metadata)
-        => new(AttractionId.New(), name, metadata);
+    internal static Attraction CreateDraft(string name, AttractionCategory category,
+        HashSet<Season> bestSeasons, VisitDuration duration, bool isOutdoor, bool isFree,
+        AttractionMetadata metadata)
+        => new(AttractionId.New(), name, category, bestSeasons, duration, isOutdoor, isFree, metadata);
 
     public void Publish()
     {

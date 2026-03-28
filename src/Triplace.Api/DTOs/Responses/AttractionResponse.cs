@@ -5,6 +5,11 @@ public class AttractionResponse
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public List<string> BestSeasons { get; set; } = [];
+    public string Duration { get; set; } = string.Empty;
+    public bool IsOutdoor { get; set; }
+    public bool IsFree { get; set; }
     public AttractionMetadataResponse Metadata { get; set; } = new();
 }
 

@@ -4,6 +4,7 @@ using Triplace.Domain.Builders;
 using Triplace.Domain.Enums;
 using Triplace.Domain.Ids;
 using Triplace.Domain.ValueObjects;
+using Season = Triplace.Domain.Enums.Season;
 
 namespace Triplace.Api.Seeding;
 
@@ -40,20 +41,66 @@ public static class DataSeeder
         // 2. Create attractions (drafts)
         var attractionDefs = new[]
         {
-            ("Wawel", "Historyczny zamek królewski na wzgórzu wawelskim"),
-            ("Rynek Główny", "Największy średniowieczny rynek w Europie"),
-            ("Sukiennice", "Gotycka hala targowa na Rynku Głównym"),
-            ("Kazimierz", "Historyczna dzielnica żydowska"),
-            ("Kościół Mariacki", "Gotycka bazylika z ołtarzem Wita Stwosza"),
-            ("Muzeum Auschwitz", "Miejsce pamięci byłego obozu koncentracyjnego")
+            new CreateAttractionCommand(
+                "Wawel",
+                AttractionCategory.Museum,
+                new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn },
+                VisitDuration.Long,
+                IsOutdoor: false,
+                IsFree: false,
+                [new MetadataEntry("opis", "Historyczny zamek królewski na wzgórzu wawelskim")]),
+
+            new CreateAttractionCommand(
+                "Rynek Główny",
+                AttractionCategory.NaturalSite,
+                new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+                VisitDuration.Medium,
+                IsOutdoor: true,
+                IsFree: true,
+                [new MetadataEntry("opis", "Największy średniowieczny rynek w Europie")]),
+
+            new CreateAttractionCommand(
+                "Sukiennice",
+                AttractionCategory.Museum,
+                new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+                VisitDuration.Medium,
+                IsOutdoor: false,
+                IsFree: false,
+                [new MetadataEntry("opis", "Gotycka hala targowa na Rynku Głównym")]),
+
+            new CreateAttractionCommand(
+                "Kazimierz",
+                AttractionCategory.NaturalSite,
+                new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn },
+                VisitDuration.Long,
+                IsOutdoor: true,
+                IsFree: true,
+                [new MetadataEntry("opis", "Historyczna dzielnica żydowska")]),
+
+            new CreateAttractionCommand(
+                "Kościół Mariacki",
+                AttractionCategory.Church,
+                new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+                VisitDuration.Short,
+                IsOutdoor: false,
+                IsFree: false,
+                [new MetadataEntry("opis", "Gotycka bazylika z ołtarzem Wita Stwosza")]),
+
+            new CreateAttractionCommand(
+                "Muzeum Auschwitz",
+                AttractionCategory.Museum,
+                new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn },
+                VisitDuration.Long,
+                IsOutdoor: false,
+                IsFree: true,
+                [new MetadataEntry("opis", "Miejsce pamięci byłego obozu koncentracyjnego")])
         };
 
         var attractionIds = new Dictionary<string, AttractionId>();
-        foreach (var (name, desc) in attractionDefs)
+        foreach (var command in attractionDefs)
         {
-            var id = await attractionService.CreateDraftAsync(new CreateAttractionCommand(name,
-                [new MetadataEntry("opis", desc)]));
-            attractionIds[name] = id;
+            var id = await attractionService.CreateDraftAsync(command);
+            attractionIds[command.Name] = id;
         }
 
         // 3. Publish all
