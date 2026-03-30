@@ -9,7 +9,8 @@
       "Bash(curl -s http://localhost:7117/api/attractions)",
       "Bash(curl -s http://localhost:5122/api/attractions)",
       "Bash(curl -s http://localhost:5122/api/catalogs)",
-      "Bash(curl -s http://localhost:5122/api/addon-types)"
+      "Bash(curl -s http://localhost:5122/api/addon-types)",
+      "Bash(cd:*)"
     ]
   }
 }

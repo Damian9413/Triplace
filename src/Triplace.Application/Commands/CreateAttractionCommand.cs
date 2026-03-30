@@ -10,4 +10,5 @@ public record CreateAttractionCommand(
     VisitDuration Duration,
     bool IsOutdoor,
     bool IsFree,
+    IReadOnlySet<AttractionAmenity> Amenities,
     IReadOnlyList<MetadataEntry> MetadataEntries);

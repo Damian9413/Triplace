@@ -34,7 +34,7 @@ public class RoutesController(RouteService service) : ControllerBase
             request.Name,
             request.Description,
             Enum.Parse<Season>(request.Season, true),
-            request.ScopeGroupId.HasValue ? new AttractionGroupId(request.ScopeGroupId.Value) : null,
+            request.ScopeAttractionId.HasValue ? new AttractionId(request.ScopeAttractionId.Value) : null,
             items);
 
         var id = await service.CreateAsync(command);

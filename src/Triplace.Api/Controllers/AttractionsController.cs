@@ -23,6 +23,10 @@ public class AttractionsController(AttractionService service) : ControllerBase
             .Select(s => Enum.Parse<Season>(s, true))
             .ToHashSet();
 
+        var amenities = request.Amenities
+            .Select(a => Enum.Parse<AttractionAmenity>(a, true))
+            .ToHashSet();
+
         var command = new CreateAttractionCommand(
             request.Name,
             Enum.Parse<AttractionCategory>(request.Category, true),
@@ -30,6 +34,7 @@ public class AttractionsController(AttractionService service) : ControllerBase
             Enum.Parse<VisitDuration>(request.Duration, true),
             request.IsOutdoor,
             request.IsFree,
+            amenities,
             request.Metadata.Select(m => new MetadataEntry(m.Label, m.Value)).ToList());
 
         var id = await service.CreateDraftAsync(command);
@@ -51,7 +56,8 @@ public class AttractionsController(AttractionService service) : ControllerBase
         [FromQuery] string? season,
         [FromQuery] bool? isOutdoor,
         [FromQuery] bool? isFree,
-        [FromQuery] string? duration)
+        [FromQuery] string? duration,
+        [FromQuery] string? amenity)
     {
         var specs = new List<ISpecification<Domain.Entities.Attraction>>();
 
@@ -65,6 +71,8 @@ public class AttractionsController(AttractionService service) : ControllerBase
             specs.Add(new IsOutdoorSpec());
         if (isFree is true)
             specs.Add(new IsFreeSpec());
+        if (amenity is not null)
+            specs.Add(new HasAmenitySpec(Enum.Parse<AttractionAmenity>(amenity, true)));
 
         if (specs.Count == 0)
         {
@@ -100,6 +108,14 @@ public class AttractionsController(AttractionService service) : ControllerBase
     public async Task<IActionResult> Archive(Guid id)
     {
         await service.ArchiveAsync(new AttractionId(id));
+        return NoContent();
+    }
+
+    [HttpPost("{parentId:guid}/children/{childId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> AddChild(Guid parentId, Guid childId)
+    {
+        await service.AddChildAsync(new AttractionId(parentId), new AttractionId(childId));
         return NoContent();
     }
 }
