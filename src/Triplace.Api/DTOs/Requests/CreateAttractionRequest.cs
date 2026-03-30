@@ -8,6 +8,7 @@ public class CreateAttractionRequest
     public string Duration { get; set; } = string.Empty;
     public bool IsOutdoor { get; set; }
     public bool IsFree { get; set; }
+    public List<string> Amenities { get; set; } = [];
     public List<MetadataEntryRequest> Metadata { get; set; } = [];
 }
 

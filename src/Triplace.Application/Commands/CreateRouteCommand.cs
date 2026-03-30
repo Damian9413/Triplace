@@ -7,7 +7,7 @@ public record CreateRouteCommand(
     string Name,
     string Description,
     Season Season,
-    AttractionGroupId? ScopeGroupId,
+    AttractionId? ScopeAttractionId,
     IReadOnlyList<RouteItemCommand> Items);
 
 public record RouteItemCommand(AttractionId AttractionId, Priority Priority);

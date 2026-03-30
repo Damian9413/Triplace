@@ -11,6 +11,7 @@ public class AttractionBuilder
     private VisitDuration _duration;
     private bool _isOutdoor;
     private bool _isFree;
+    private readonly HashSet<AttractionAmenity> _amenities = [];
     private readonly AttractionMetadataBuilder _metadataBuilder = new();
 
     private AttractionBuilder(string name) => _name = name;
@@ -22,6 +23,7 @@ public class AttractionBuilder
     public AttractionBuilder WithDuration(VisitDuration duration) { _duration = duration; return this; }
     public AttractionBuilder Outdoor() { _isOutdoor = true; return this; }
     public AttractionBuilder Free() { _isFree = true; return this; }
+    public AttractionBuilder WithAmenities(params AttractionAmenity[] amenities) { foreach (var a in amenities) _amenities.Add(a); return this; }
 
     public AttractionBuilder WithMetadata(Action<AttractionMetadataBuilder> configure)
     {
@@ -30,5 +32,5 @@ public class AttractionBuilder
     }
 
     public Attraction Build() =>
-        Attraction.CreateDraft(_name, _category, _bestSeasons, _duration, _isOutdoor, _isFree, _metadataBuilder.Build());
+        Attraction.CreateDraft(_name, _category, _bestSeasons, _duration, _isOutdoor, _isFree, _amenities, _metadataBuilder.Build());
 }

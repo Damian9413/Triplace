@@ -12,20 +12,20 @@ public class Route
     public string Name { get; }
     public string Description { get; }
     public Season Season { get; }
-    public AttractionGroupId? ScopeGroupId { get; }
+    public AttractionId? ScopeAttractionId { get; }
     public IReadOnlyList<RouteItem> Items => _items.AsReadOnly();
 
-    private Route(RouteId id, string name, string description, Season season, AttractionGroupId? scopeGroupId)
+    private Route(RouteId id, string name, string description, Season season, AttractionId? scopeAttractionId)
     {
         Id = id;
         Name = name;
         Description = description;
         Season = season;
-        ScopeGroupId = scopeGroupId;
+        ScopeAttractionId = scopeAttractionId;
     }
 
-    internal static Route Create(string name, string description, Season season, AttractionGroupId? scopeGroupId)
-        => new(RouteId.New(), name, description, season, scopeGroupId);
+    internal static Route Create(string name, string description, Season season, AttractionId? scopeAttractionId)
+        => new(RouteId.New(), name, description, season, scopeAttractionId);
 
     public void AddItem(AttractionId attractionId, Priority priority)
     {

@@ -6,7 +6,7 @@ public class RouteResponse
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Season { get; set; } = string.Empty;
-    public Guid? ScopeGroupId { get; set; }
+    public Guid? ScopeAttractionId { get; set; }
     public List<RouteItemResponse> MustHaves { get; set; } = [];
     public List<RouteItemResponse> Optionals { get; set; } = [];
 }

@@ -12,22 +12,23 @@ public class AttractionService(IAttractionRepository repository)
 {
     public async Task<AttractionId> CreateDraftAsync(CreateAttractionCommand command)
     {
-        var attraction = AttractionBuilder.CreateDraft(command.Name)
+        var builder = AttractionBuilder.CreateDraft(command.Name)
             .InCategory(command.Category)
             .BestIn([.. command.BestSeasons])
             .WithDuration(command.Duration)
+            .WithAmenities([.. command.Amenities])
             .WithMetadata(m =>
             {
                 foreach (var entry in command.MetadataEntries)
                     m.AddEntry(entry.Label, entry.Value);
             });
 
-        if (command.IsOutdoor) attraction.Outdoor();
-        if (command.IsFree) attraction.Free();
+        if (command.IsOutdoor) builder.Outdoor();
+        if (command.IsFree) builder.Free();
 
-        var built = attraction.Build();
-        await repository.SaveAsync(built);
-        return built.Id;
+        var attraction = builder.Build();
+        await repository.SaveAsync(attraction);
+        return attraction.Id;
     }
 
     public async Task PublishAsync(AttractionId id)
@@ -42,6 +43,15 @@ public class AttractionService(IAttractionRepository repository)
         var attraction = await GetOrThrowAsync(id);
         attraction.Archive();
         await repository.SaveAsync(attraction);
+    }
+
+    public async Task AddChildAsync(AttractionId parentId, AttractionId childId)
+    {
+        var parent = await GetOrThrowAsync(parentId);
+        var child = await GetOrThrowAsync(childId);
+        parent.AddChild(child);
+        await repository.SaveAsync(parent);
+        await repository.SaveAsync(child);
     }
 
     public Task<Attraction?> GetByIdAsync(AttractionId id) => repository.GetByIdAsync(id);

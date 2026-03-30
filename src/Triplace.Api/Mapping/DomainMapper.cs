@@ -1,6 +1,5 @@
 using Triplace.Api.DTOs.Responses;
 using Triplace.Domain.Entities;
-using Triplace.Domain.Interfaces;
 using Triplace.Domain.ValueObjects;
 
 namespace Triplace.Api.Mapping;
@@ -17,6 +16,10 @@ public static class DomainMapper
         Duration = a.Duration.ToString(),
         IsOutdoor = a.IsOutdoor,
         IsFree = a.IsFree,
+        Amenities = a.Amenities.Select(am => am.ToString()).ToList(),
+        ParentId = a.ParentId?.Value,
+        IsLeaf = a.IsLeaf,
+        Children = a.Children.Select(ToResponse).ToList(),
         Metadata = new AttractionMetadataResponse
         {
             Entries = a.Metadata.Entries.Select(e => new MetadataEntryResponse
@@ -26,77 +29,6 @@ public static class DomainMapper
             }).ToList()
         }
     };
-
-    public static AttractionGroupResponse ToResponse(AttractionGroup g) => new()
-    {
-        Id = g.Id.Value,
-        Name = g.Name,
-        Entries = g.Entries.Select(ToResponse).ToList()
-    };
-
-    public static AttractionEntryResponse ToResponse(AttractionEntry e)
-    {
-        var response = new AttractionEntryResponse
-        {
-            Id = e.Id.Value,
-            Addons = e.Addons.Select(ToResponse).ToList()
-        };
-
-        if (e.Node is Attraction attraction)
-        {
-            response.NodeType = "Attraction";
-            response.NodeId = attraction.Id.Value;
-            response.NodeName = attraction.Name;
-        }
-        else if (e.Node is AttractionGroup group)
-        {
-            response.NodeType = "Group";
-            response.NodeId = group.Id.Value;
-            response.NodeName = group.Name;
-            response.NestedEntries = group.Entries.Select(ToResponse).ToList();
-        }
-
-        return response;
-    }
-
-    public static AddonInstanceResponse ToResponse(AttractionAddonInstance addon) => new()
-    {
-        AddonTypeId = addon.Type.Id.Value,
-        AddonTypeName = addon.Type.Name,
-        Values = new Dictionary<string, object>(addon.Values)
-    };
-
-    public static AddonTypeResponse ToResponse(AttractionAddonType t) => new()
-    {
-        Id = t.Id.Value,
-        Name = t.Name,
-        Fields = t.Fields.Select(ToResponse).ToList()
-    };
-
-    public static FieldDefinitionResponse ToResponse(AddonFieldDefinition f)
-    {
-        var response = new FieldDefinitionResponse
-        {
-            FieldName = f.FieldName,
-            ValueType = f.ValueType.ToString(),
-        };
-
-        switch (f.Constraint)
-        {
-            case AllowedValuesConstraint avc:
-                response.ConstraintType = "AllowedValues";
-                response.AllowedValues = avc.AllowedValues;
-                break;
-            case DateRangeConstraint:
-                response.ConstraintType = "DateRange";
-                break;
-            default:
-                response.ConstraintType = "Unconstrained";
-                break;
-        }
-
-        return response;
-    }
 
     public static SeasonalCatalogResponse ToResponse(SeasonalCatalog c) => new()
     {
@@ -120,7 +52,7 @@ public static class DomainMapper
         Name = r.Name,
         Description = r.Description,
         Season = r.Season.ToString(),
-        ScopeGroupId = r.ScopeGroupId?.Value,
+        ScopeAttractionId = r.ScopeAttractionId?.Value,
         MustHaves = r.GetMustHaves().Select(ToResponse).ToList(),
         Optionals = r.GetOptionals().Select(ToResponse).ToList()
     };

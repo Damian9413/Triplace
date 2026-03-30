@@ -18,8 +18,8 @@ public class RouteService(
             .WithDescription(command.Description)
             .ForSeason(command.Season);
 
-        if (command.ScopeGroupId.HasValue)
-            builder.ScopedTo(command.ScopeGroupId.Value);
+        if (command.ScopeAttractionId.HasValue)
+            builder.ScopedTo(command.ScopeAttractionId.Value);
 
         foreach (var item in command.Items)
             builder.WithItem(item.AttractionId, item.Priority);

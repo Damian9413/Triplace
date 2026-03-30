@@ -10,6 +10,10 @@ public class AttractionResponse
     public string Duration { get; set; } = string.Empty;
     public bool IsOutdoor { get; set; }
     public bool IsFree { get; set; }
+    public List<string> Amenities { get; set; } = [];
+    public Guid? ParentId { get; set; }
+    public bool IsLeaf { get; set; }
+    public List<AttractionResponse> Children { get; set; } = [];
     public AttractionMetadataResponse Metadata { get; set; } = new();
 }
 
