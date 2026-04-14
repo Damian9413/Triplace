@@ -76,13 +76,94 @@ public static class DataSeeder
             new HashSet<AttractionAmenity> { AttractionAmenity.AudioGuide, AttractionAmenity.GuideAvailable, AttractionAmenity.WheelchairAccess },
             [new MetadataEntry("adres", "Więźniów Oświęcimia 20, 32-603 Oświęcim")]));
 
+        // Wawel — sub-atrakcje (dane: wawel.krakow.pl/co-zwiedzac)
+        var zamekId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Zamek Królewski na Wawelu",
+            AttractionCategory.Museum,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+            VisitDuration.Long,
+            IsOutdoor: false,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.AudioGuide, AttractionAmenity.GuideAvailable, AttractionAmenity.WheelchairAccess, AttractionAmenity.GiftShop },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "95 zł")]));
+
+        var podziemiaId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Podziemia Zamku — Wawel Zaginiony",
+            AttractionCategory.Museum,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+            VisitDuration.Medium,
+            IsOutdoor: false,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.AudioGuide, AttractionAmenity.GuideAvailable },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "47 zł")]));
+
+        var skarbiecId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Skarbiec Koronny",
+            AttractionCategory.Museum,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+            VisitDuration.Medium,
+            IsOutdoor: false,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.GuideAvailable, AttractionAmenity.WheelchairAccess },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "47 zł")]));
+
+        var zbrojowniaId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Zbrojownia",
+            AttractionCategory.Museum,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn, Season.Winter },
+            VisitDuration.Short,
+            IsOutdoor: false,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.GuideAvailable },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "47 zł")]));
+
+        var smoczaJamaId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Smocza Jama",
+            AttractionCategory.Entertainment,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn },
+            VisitDuration.Short,
+            IsOutdoor: true,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.FamilyFriendly },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "15 zł"), new MetadataEntry("sezon", "27 kwietnia – 31 października")]));
+
+        var ogrodyId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Ogrody Królewskie",
+            AttractionCategory.Park,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn },
+            VisitDuration.Short,
+            IsOutdoor: true,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.FamilyFriendly, AttractionAmenity.WheelchairAccess },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "11 zł"), new MetadataEntry("sezon", "24 kwietnia – 4 października")]));
+
+        var basztaId = await attractionService.CreateDraftAsync(new CreateAttractionCommand(
+            "Baszta Widokowa",
+            AttractionCategory.NaturalSite,
+            new HashSet<Season> { Season.Spring, Season.Summer, Season.Autumn },
+            VisitDuration.Short,
+            IsOutdoor: true,
+            IsFree: false,
+            new HashSet<AttractionAmenity> { AttractionAmenity.ParkingNearby },
+            [new MetadataEntry("adres", "Wawel 5, 31-001 Kraków"), new MetadataEntry("bilet_normalny", "19 zł"), new MetadataEntry("sezon", "24 kwietnia – 31 października")]));
+
         // 2. Publish all
-        foreach (var id in new[] { wawelId, rynekId, sukienniceId, kazimierzId, kosciolId, auschwitzId })
+        foreach (var id in new[] { wawelId, rynekId, sukienniceId, kazimierzId, kosciolId, auschwitzId,
+                     zamekId, podziemiaId, skarbiecId, zbrojowniaId, smoczaJamaId, ogrodyId, basztaId })
             await attractionService.PublishAsync(id);
 
         // 3. Hierarchy: Sukiennice i Kościół Mariacki są pod Rynkiem Głównym
         await attractionService.AddChildAsync(rynekId, sukienniceId);
         await attractionService.AddChildAsync(rynekId, kosciolId);
+
+        // Wawel — zagnieżdżona hierarchia sub-atrakcji
+        await attractionService.AddChildAsync(wawelId, zamekId);
+        await attractionService.AddChildAsync(wawelId, podziemiaId);
+        await attractionService.AddChildAsync(wawelId, skarbiecId);
+        await attractionService.AddChildAsync(wawelId, zbrojowniaId);
+        await attractionService.AddChildAsync(wawelId, smoczaJamaId);
+        await attractionService.AddChildAsync(wawelId, ogrodyId);
+        await attractionService.AddChildAsync(wawelId, basztaId);
 
         // 4. Seasonal catalog
         var catalogId = await catalogService.CreateAsync(new CreateSeasonalCatalogCommand(

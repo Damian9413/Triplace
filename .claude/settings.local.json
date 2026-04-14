@@ -10,7 +10,8 @@
       "Bash(curl -s http://localhost:5122/api/attractions)",
       "Bash(curl -s http://localhost:5122/api/catalogs)",
       "Bash(curl -s http://localhost:5122/api/addon-types)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "WebFetch(domain:wawel.krakow.pl)"
     ]
   }
 }
